@@ -1,5 +1,4 @@
-data/
-.env
-.venv/
-__pycache__/
-*.pyc
+AGENT_DRY_RUN=true
+AGENT_MODE=approval_first
+API_BASE_URL=
+DEFAULT_PRICE_CURRENCY=EUR

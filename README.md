@@ -1,36 +1,68 @@
 # MONEYMAKER1
 
-AI web-operations platform for websites, maintenance, client acquisition, and subscriptions.
+AI web operations platform for websites, maintenance, client acquisition, and subscriptions.
 
-## Revenue agent MVP
+## Full revenue agent
 
-This branch contains a safe, approval-first lead-generation agent for selling web services:
+This repository now contains a complete, approval-first revenue assistant designed to help generate business opportunities ethically and legally.
 
-- web design and landing pages
-- website creation and maintenance
-- lightweight business workflow systems
+It is built for a practical workflow:
 
-The agent **does not scrape LinkedIn, impersonate a person, send unsolicited messages, accept contracts, or take payments autonomously**. LinkedIn and other platforms must be connected through their official APIs or used manually in accordance with their terms. The agent prepares a ranked prospect list and personalized drafts; a human approves every outreach action.
+- import authorized leads
+- score prospects by need, quality, and fit
+- audit the company website for weak signals
+- recommend the best service offer
+- generate a human-review outreach draft
+- save an approval queue before any message is sent
 
-### Run locally
+### Safety rules
+
+This project intentionally does not:
+
+- scrape personal data without permission
+- impersonate people or businesses
+- auto-send messages without approval
+- accept payments or contracts automatically
+- operate in a way that violates platform terms
+
+The app is designed in dry-run mode by default. All actions are reviewable. Human validation is mandatory before outreach or invoicing.
+
+## Quick start
 
 ```bash
 python3 -m venv .venv
 . .venv/bin/activate
 python -m pip install -r requirements.txt
-cp .env.example .env
-python -m revenue_agent.cli --input examples/leads.csv --output data/outreach_queue.json
+python -m revenue_agent --help
+python -m revenue_agent generate --input examples/leads.csv --output data/outreach_queue.json
+python -m revenue_agent audit --url https://example.com
 ```
 
-Review `data/outreach_queue.json` before sending anything. Set `AGENT_DRY_RUN=true` unless you have implemented and verified an official messaging integration.
+To run the API server:
 
-### Workflow
+```bash
+uvicorn revenue_agent.app:app --reload
+```
 
-1. Import leads from an authorized source (CSV export or official API).
-2. Score prospects using transparent signals such as missing website, broken mobile layout, or outdated content.
-3. Generate a truthful, personalized offer for a service the business can actually deliver.
-4. Save drafts to an approval queue.
-5. A human reviews consent, accuracy, pricing, and platform policy before sending.
-6. After a signed agreement and successful payment setup, deliver the work and manage recurring maintenance with explicit customer consent.
+## Workflow
 
-This is an earning assistant, not a guaranteed money-making machine. Revenue depends on the quality of the offer, legal compliance, customer demand, delivery, and payment terms.
+1. Import leads from an approved source or a CSV export.
+2. Score leads based on business need, website quality, and offer fit.
+3. Audit the website to confirm a measurable opportunity.
+4. Recommend a service such as landing page, website redesign, maintenance, or workflow automation.
+5. Generate a draft message and a proposal with pricing guidance.
+6. Require human approval before sending messages or starting work.
+
+## Project structure
+
+- `revenue_agent/models.py` — data models
+- `revenue_agent/lead_scoring.py` — scoring and offer generation
+- `revenue_agent/website_audit.py` — remote website checks
+- `revenue_agent/queue.py` — import/export workflows
+- `revenue_agent/cli.py` — command-line runner
+- `revenue_agent/app.py` — FastAPI API
+- `examples/leads.csv` — sample lead set
+
+## License
+
+This project is for educational and operational experimentation. You are responsible for compliance with local laws, platform terms, privacy rules, and customer consent requirements.

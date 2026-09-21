@@ -1,3 +1,4 @@
-# No runtime dependency is required for the approval-first MVP.
-# Add an official API client only after reviewing its terms and implementing rate limits,
-# consent checks, logging, and human approval.
+name,company,role,website,source,consent_or_relationship,issue,email,profile_url,notes
+Jana Novakova,North Peak Studio,Owner,https://northpeak.example,manual_referral,Met through a local business network,Outdated website and weak mobile UX,jana@northpeak.example,,Need a stronger conversion path and visible contact CTA
+Matej Hruska,BlueStone Logistics,Marketing Lead,https://bluestone.example,manual,Customer said they need a better offer page,Landing pages for campaign leads,matej@bluestone.example,,Need a stronger ad funnel and clearer service presentation
+Anna Kolarova,Maple Studio,Founder,https://maplestudio.example,web_export,Prior conversation about improvement,Website maintenance and hosting support,anna@maplestudio.example,,Needs service page updates and regular maintenance
