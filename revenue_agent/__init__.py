@@ -14,7 +14,7 @@ from .website_audit import audit_website
 app = FastAPI(
     title="MONEYMAKER1 Revenue Agent",
     version="1.0.0",
-    description="Approval-first lead generation and web services offer workflow.",
+    description="Approval-first lead generation and web-services offer workflow.",
 )
 
 
