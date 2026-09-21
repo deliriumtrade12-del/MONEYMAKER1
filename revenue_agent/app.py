@@ -1,16 +1,21 @@
 from __future__ import annotations
 
+import json
+from pathlib import Path
 from typing import Any
+
+from .dashboard import build_dashboard
+from .lead_scoring import generate_offer, score_lead
+from .models import Lead
+from .queue import build_queue, load_leads_csv, write_queue
+from .queue_store import set_status
+from .website_audit import audit_website
 
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-from .lead_scoring import generate_offer, score_lead
-from .models import Lead
-from .queue import build_queue, load_leads_csv, write_queue
-from .website_audit import audit_website
-
-app = FastAPI(title="MONEYMAKER1 Revenue Agent", version="1.1.0")
+app = FastAPI(title="MONEYMAKER1 Revenue Agent", version="1.2.0")
+QUEUE_PATH = Path("data/outreach_queue.json")
 
 
 class LeadInput(BaseModel):
@@ -35,7 +40,13 @@ class AuditInput(BaseModel):
 
 class QueueRequest(BaseModel):
     input_file: str = "examples/leads.csv"
-    output_file: str = "data/outreach_queue.json"
+    output_file: str = str(QUEUE_PATH)
+
+
+class StatusRequest(BaseModel):
+    item_id: str = Field(..., min_length=1)
+    status: str
+    approved: bool = False
 
 
 @app.get("/health")
@@ -51,17 +62,16 @@ def lead_score(payload: LeadInput) -> dict[str, Any]:
 
 @app.post("/lead/offer")
 def lead_offer(payload: LeadInput) -> dict[str, Any]:
-    draft = generate_offer(payload.to_lead())
-    return draft.__dict__
+    return generate_offer(payload.to_lead()).__dict__
 
 
 @app.post("/audit")
-def website_audit(payload: AuditInput) -> dict[str, Any]:
+def website_audit_endpoint(payload: AuditInput) -> dict[str, Any]:
     return audit_website(payload.website).__dict__
 
 
 @app.post("/queue/generate")
-def generate_queue(payload: QueueRequest) -> dict[str, Any]:
+def generate_queue_endpoint(payload: QueueRequest) -> dict[str, Any]:
     try:
         leads = load_leads_csv(payload.input_file)
     except FileNotFoundError as exc:
@@ -72,11 +82,24 @@ def generate_queue(payload: QueueRequest) -> dict[str, Any]:
 
 
 @app.get("/queue")
-def read_queue(path: str = "data/outreach_queue.json") -> list[dict[str, Any]]:
-    import json
-    from pathlib import Path
-
+def read_queue(path: str = str(QUEUE_PATH)) -> list[dict[str, Any]]:
     target = Path(path)
     if not target.exists():
         return []
     return json.loads(target.read_text(encoding="utf-8"))
+
+
+@app.patch("/queue/status")
+def update_queue_status(payload: StatusRequest) -> dict[str, Any]:
+    try:
+        return set_status(QUEUE_PATH, payload.item_id, payload.status, payload.approved)
+    except (KeyError, ValueError, PermissionError) as exc:
+        raise HTTPException(status_code=400, detail=str(exc)) from exc
+
+
+@app.get("/dashboard")
+def dashboard(path: str = str(QUEUE_PATH)) -> dict[str, Any]:
+    target = Path(path)
+    if not target.exists():
+        return build_dashboard([])
+    return build_dashboard(json.loads(target.read_text(encoding="utf-8")))

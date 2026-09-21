@@ -5,8 +5,8 @@ from .models import Lead
 
 
 def prepare_offer(lead: Lead) -> dict[str, object]:
-    """Create a reviewable offer; this function never sends it."""
-    return generate_offer(lead).__dict__
+    """Create a draft only; this module never sends outreach or accepts payment."""
+    return generate_offer(lead).__dict__.copy()
 
 
 def monthly_retainer(service: str) -> str:
