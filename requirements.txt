@@ -1,0 +1,3 @@
+# No runtime dependency is required for the approval-first MVP.
+# Add an official API client only after reviewing its terms and implementing rate limits,
+# consent checks, logging, and human approval.
