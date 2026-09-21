@@ -6,13 +6,15 @@ from typing import Any
 from fastapi import FastAPI, HTTPException
 from pydantic import BaseModel, Field
 
-from .lead_scoring import audit_website, build_queue, generate_offer, load_leads_csv, score_lead, write_queue
+from .lead_scoring import generate_offer, score_lead
 from .models import Lead
+from .queue import build_queue, load_leads_csv, write_queue
+from .website_audit import audit_website
 
 app = FastAPI(
     title="MONEYMAKER1 Revenue Agent",
     version="1.0.0",
-    description="Approval-first lead generation and service offer workflow for web services.",
+    description="Approval-first lead generation and web services offer workflow.",
 )
 
 
@@ -30,7 +32,7 @@ class LeadInput(BaseModel):
 
 
 class AuditInput(BaseModel):
-    website: str = Field(..., description="URL to audit")
+    website: str = Field(..., description="Website URL to audit")
 
 
 class QueueRequest(BaseModel):
@@ -97,4 +99,5 @@ def list_queue() -> list[dict[str, Any]]:
     output_path = Path("data/outreach_queue.json")
     if not output_path.exists():
         return []
-    return __import__("json").loads(output_path.read_text(encoding="utf-8"))
+    import json
+    return json.loads(output_path.read_text(encoding="utf-8"))
