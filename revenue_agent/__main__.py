@@ -1,6 +1,6 @@
-"""MONEYMAKER1 revenue agent package."""
+from __future__ import annotations
 
-from .app import app
+from .queue import main
 
-__all__ = ["app"]
-__version__ = "1.0.0"
+if __name__ == "__main__":
+    raise SystemExit(main())

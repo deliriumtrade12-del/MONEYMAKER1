@@ -1,36 +1,17 @@
 from __future__ import annotations
 
-import json
-from dataclasses import dataclass, field
-from pathlib import Path
+from collections import Counter
+from typing import Any
 
 
-@dataclass
-class SalesRecord:
-    company: str
-    contact: str = ""
-    service: str = "website"
-    status: str = "new"
-    score: int = 0
-    notes: list[str] = field(default_factory=list)
-
-    def approve(self) -> None:
-        self.status = "approved"
-
-    def to_dict(self) -> dict[str, object]:
-        return {
-            "company": self.company,
-            "contact": self.contact,
-            "service": self.service,
-            "status": self.status,
-            "score": self.score,
-            "notes": self.notes,
-        }
-
-
-def save_sales_records(path: str | Path, records: list[SalesRecord]) -> Path:
-    output = Path(path)
-    output.parent.mkdir(parents=True, exist_ok=True)
-    payload = [record.to_dict() for record in records]
-    output.write_text(json.dumps(payload, indent=2, ensure_ascii=False), encoding="utf-8")
-    return output
+def build_dashboard(queue: list[dict[str, Any]]) -> dict[str, Any]:
+    priorities = Counter(item.get("priority", "low") for item in queue)
+    services = Counter(item.get("service", "website") for item in queue)
+    return {
+        "total": len(queue),
+        "high_priority": priorities.get("high", 0),
+        "medium_priority": priorities.get("medium", 0),
+        "low_priority": priorities.get("low", 0),
+        "services": dict(services),
+        "highest_score": max((int(item.get("score", 0)) for item in queue), default=0),
+    }
