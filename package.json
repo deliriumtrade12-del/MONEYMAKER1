@@ -1,0 +1,18 @@
+{
+  "name": "aura-trinity",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Aura Trinity AI operations worker with 45 specialized worker agents",
+  "main": "worker.js",
+  "scripts": {
+    "dev": "wrangler dev --local",
+    "deploy": "wrangler deploy",
+    "deploy:prod": "wrangler deploy --env production",
+    "logs": "wrangler tail",
+    "secret:put": "wrangler secret put",
+    "secret:list": "wrangler secret list"
+  },
+  "devDependencies": {
+    "wrangler": "^3.101.0"
+  }
+}

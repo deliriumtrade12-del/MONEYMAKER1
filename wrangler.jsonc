@@ -1,0 +1,18 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "aura-trinity",
+  "main": "worker.js",
+  "compatibility_date": "2025-09-01",
+  "compatibility_flags": [
+    "nodejs_compat"
+  ],
+  "workers_dev": true,
+  "observability": {
+    "enabled": true
+  },
+  "vars": {
+    "APP_NAME": "Aura Trinity",
+    "APP_ENV": "development",
+    "MODEL": "@cf/meta/llama-3.2-3b-instruct"
+  }
+}
